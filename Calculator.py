@@ -86,7 +86,7 @@ def calculation(a,operator,b):#No tratare de tratar errores en esta funcion para
         return a/b;
     else:#No es necesario.
         return None;
-def Caculator(str_input):
+def Calculator(str_input):
     class Error_arg(Exception):
         def __init__(self,msg="Error: The argument must only be str. Example: Cacular('1+1');"):
             self.message=msg;
@@ -131,9 +131,9 @@ def Caculator(str_input):
         elif char=='(':
             l=search_parenthesis(str_input,i);
             if isinstance(l,int):#Si se retorno -1 entonces no se ha cerrado el parentesis.
-                num.append(Caculator( str_input[i+1:] ));
+                num.append(Calculator( str_input[i+1:] ));
                 break;
-            str_=str( Caculator(str_input[ i+1:l[1] ]) );
+            str_=str( Calculator(str_input[ i+1:l[1] ]) );
             #tambien es valido: num[a_or_b].append(Cacular( str_input[ l[0]+1:l[1] ] ));
             i=l[1];
             flags["previous"]=True;
@@ -226,13 +226,15 @@ if __name__=="__main__":
         from timeit import timeit;
     """operation="1+1-(2+3+(1-1))*(1+(2-3-4))*4";#Da 12 porque pase por alto que primero se multiprica y despues se saca lo demas.
     print("operacion con python: "+str(1+1-(2+3+(1-1))*(1+(2-3-4))*4));
-    print(operation+": ",Caculator(operation));
+    print(operation+": ",Calculator(operation));
     operation="123+";
-    #print(operation+": ",Caculator(operation));
+    #print(operation+": ",Calculator(operation));
     """
     input_='';
     while True:
         input_=input("Ingrese su operacion para sacar el calculo:\n --> ").lower();
         if input_=='q':
             break;
-        print("Operacion con python: ")
+        print("Operacion con python: ",end="");
+        timeit(f"print({input_});",number=1);
+        print("Operacion com mi calculadora: "+str());
