@@ -221,20 +221,16 @@ def Calculator(str_input):
 
 
 if __name__=="__main__":
-    DEBUG=True;
-    if DEBUG:
-        from timeit import timeit;
-    """operation="1+1-(2+3+(1-1))*(1+(2-3-4))*4";#Da 12 porque pase por alto que primero se multiprica y despues se saca lo demas.
-    print("operacion con python: "+str(1+1-(2+3+(1-1))*(1+(2-3-4))*4));
-    print(operation+": ",Calculator(operation));
-    operation="123+";
-    #print(operation+": ",Calculator(operation));
     """
+        Para saber si funciona la Calculadora comparamos su resultados con los resultados de python.
+    """
+    from timeit import timeit;
     input_='';
     while True:
-        input_=input("Ingrese su operacion para sacar el calculo:\n --> ").lower();
+        input_=input("Ingrese 'q' para terminar, ingrese su operacion para sacar el calculo:\n --> ").lower();
         if input_=='q':
             break;
         print("Operacion con python: ",end="");
         timeit(f"print({input_});",number=1);
-        print("Operacion com mi calculadora: "+str());
+        print("Operacion com mi calculadora: "+str(Calculator(input_)));
+    input("Enter space for finish.");
