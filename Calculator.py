@@ -155,7 +155,7 @@ def Calculator(str_input) -> str:
     num=[];
     operand=[];
     str_="";
-    flags={"previous":False,"is_mult":False};
+    flags={"previous":False,"is_":""};
     i=0;
     MAX_NUM=0;
     MAX_OPERAND=0;
@@ -173,42 +173,42 @@ def Calculator(str_input) -> str:
             elif MAX_NUM==1:#Por si el usuario ingreso 1 numero:
                 return num[0];
             elif MAX_NUM==2:#Ingreso dos numeros.
+                if MAX_OPERAND==0:#Si estuvo un signo de multipricacion o division ya se habra eliminado, pero falta hacer la operacion.
+                    return num[0]*num[1] if flags["is_"]=='*' else num[0]/num[1];
                 return calculation(num[0],operand[0],num[1]);
-            #Si hay multipricacion:
-            if  flags["is_mult"]:#Recuerda primero se hace la multipricacion.
-                num[-2]=num[-2]*num[-1];
-                flags["is_mult"]=False;
-                del operand[-1], num[-1];
+            #Si el ultimo es multipricacion o division:
+            if  not flags["is_"]=="":#Recuerda primero se hace la multipricacion.
+                num[-2]=num[-2]*num[-1] if flags["is_"]=='*' else num[-2]/num[-1];
+                del num[-1];
             break;
         char=str_input[i];
         if char in signos_admitidos:
             if flags["previous"]:#Normal: 2+2
-                if  flags["is_mult"]:#Recuerda primero se hace la multipricacion.
-                    num[-1]=num[-1]*get_num_of_str(str_);
-                    flags["is_mult"]=False;
-                    del operand[-1];
+                if  not flags["is_"]=="":#Recuerda primero se hace la multipricacion.
+                    num_2=get_num_of_str(str_);
+                    num[-1]=num[-1]*num_2 if flags["is_"]=='*' else num[-1]/num_2;
+                    flags["is_"]="";
                 else:
                     num.append(get_num_of_str(str_));
-                
-                if char=='*':
-                    flags["is_mult"]=True;#si es multipricacion.
-                operand.append(char);
-                """Aqui creo otro flag para saber si es multipricacion
-                    Si lo es no se trata el numero siguiente como normalmente
-                    se quita el numero anterior y se trata con el numero actual como se debe: get_num_of_str(1)*get_num_of_str(2)
-                """
+                #Recuerda que la multipricacion y division se hacen primeros que las sumas y restas.
+                #El flags es porque actualmente no conosco el numero, pero despues si lo conocere.
+                if char=='*' or char=='/':
+                    flags["is_"]='*' if char=='*' else '/';
+                else:
+                    operand.append(char);
             else:
-                """No deberia ser necesario: if not flags["pre_is_parenthesis"]:
-                    flags["pre_is_parenthesis"]=False;
-                    continue;"""
                 if char=='-' or char=='-':#Entoces el numero es negativo.
                     is_negative=(char=='-');
                 else:
-                    #No se si debo dar error cuando hagan:
-                    #    --> 2******
-                    #    --> 2******2
-                    #Por ahora mejor no:
-                    #raise SyntaxError("Operation not valid.");
+                    #Cuando pase:
+                    #    --> 2**  retorna: 2
+                    #    --> 2**2 retorna 2*2 o 4
+                    #    --> 2/*2 retorna 2*2 o 4
+                    #    --> 2*/2 retorna 2/2 o 1
+                    #"""Se tomara el ultimo signo: Nota: Si quieres que pase el primer signo pon esto en comentario:{
+                    if char=='*' or char=='/':
+                        flags["is_"]='*' if char=='*' else '/';
+                    #}"""
                     pass;
             
             str_="";
@@ -240,9 +240,9 @@ def Calculator(str_input) -> str:
         n_2=num[i_n];
         if i_s<MAX_OPERAND:
             result=calculation(result,operand[i_s],n_2);
-            
             i_s+=1;
         else:#Ocurrio un error inesperado.
+            print(f"num: {num}, operand: {operand}, i_s: {i_s}");
             raise NameError("Error inesperado de la apricacion.");
     return result;
 
@@ -270,4 +270,10 @@ comparar={comparar}
             print("Operacion con python: ",end="");
             timeit(f"print({input_});",number=1);
         print("Operacion com mi calculadora: "+str(Calculator(input_)));
+        """Nota: Si una formula se calculo mal por mi calculadora entonces por favor rellena este formulario y enviamelo:
+            ERROR: ?
+            Resultado obtenido: ?
+            Resultado deseado: ?
+        """
     input("Enter space for finish.");
+#Nota: La calculadora de window al sacar esta cuenta: 2*2+2-4+6*7+8*6+3/2/3 me retorna 64.5, pero el shell de python y la calculadora de mi telefono me retorna 92.5, digo shell porque no saque la cuenta con mi calculadora.
